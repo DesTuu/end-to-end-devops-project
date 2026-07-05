@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ app_name }}</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 2.5rem;
+            max-width: 640px;
+            width: 100%;
+        }
+        h1 { font-size: 1.5rem; color: #38bdf8; margin-bottom: 0.5rem; }
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.7rem;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        .badge-dev { background: #854d0e; color: #fef08a; }
+        .badge-prod { background: #14532d; color: #86efac; }
+        table { width: 100%; border-collapse: collapse; }
+        td { padding: 0.6rem 0; border-bottom: 1px solid #334155; }
+        td:first-child { color: #94a3b8; width: 40%; }
+        td:last-child { font-family: monospace; color: #f1f5f9; }
+        .footer { margin-top: 1.5rem; font-size: 0.8rem; color: #64748b; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>{{ app_name }}</h1>
+        <span class="badge {{ 'badge-prod' if environment == 'production' else 'badge-dev' }}">
+            {{ environment }}
+        </span>
+        <table>
+            <tr><td>Wersja</td><td>{{ version }}</td></tr>
+            <tr><td>Hostname kontenera</td><td>{{ hostname }}</td></tr>
+            <tr><td>Python</td><td>{{ python_version }}</td></tr>
+            <tr><td>System (kontener)</td><td>{{ platform }}</td></tr>
+            <tr><td>Czas serwera</td><td>{{ timestamp }}</td></tr>
+        </table>
+        <div class="footer">
+            DevOps & Virtualization Lab — WSKZ |
+            <a href="/health" style="color:#38bdf8">/health</a> ·
+            <a href="/api/info" style="color:#38bdf8">/api/info</a>
+        </div>
+    </div>
+</body>
+</html>
