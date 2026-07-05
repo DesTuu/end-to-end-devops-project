@@ -1,8 +1,22 @@
+# 0. TL;DR — skrótowy opis projektu
+
+Projekt obejmuje pełny proces od środowiska wirtualnego do wdrożenia aplikacji:
+
+- Wirtualizacja środowiska Linux → Debian 13 (VirtualBox)
+- Konfiguracja dostępu SSH
+- Instalacja i konfiguracja Dockera
+- Aplikacja webowa w Pythonie (Flask + HTML)
+- Budowa obrazu Docker (docker build)
+- Zarządzanie wersjami w Git i GitHub
+
 # 1. Wirtualizacja - workspace
+
 Instalacja Linuxowego **Debiana 13 bez GUI** używając na Windowsie **VirtualBoxa**.
 https://www.debian.org/download
 Debian stawia na minimializm, jest znakomity do nauki od podstaw.
+
 ## 1.1. Brak sudo
+
 Aby zainstalować sudo, trzeba przelogować się na **roota**, gdyż domyślnie logujemy się na stworzone konto usera.
 ```bash
 su -
@@ -11,9 +25,12 @@ apt install sudo
 usermod -aG user_name sudo 
 ```
 Aby wyjść z zalogowanego roota należy wcisnąć `Ctrl + D`.
+
 # 2. SSH
+
 Podczas instalacji systemu należało zaznaczyć opcję SSH, aby automatycznie zainstalowało wszystkie potrzebne pakiety do połączenia zdalnego.
 Jeśli używamy VirtualBoxa do wirtualizacji należy w ustawieniach sieci zmienić typ sieci na mostkowaną (bridget), aby mieć możliwość połączenia zdalnego przez SSH.
+
 ## 2.1. Sprawdzenie SSH oraz IP
 ```bash
 sudo systemctl status ssh
@@ -24,7 +41,9 @@ ip addr
 ssh user_name@server_ip
 ```
 Po wpisaniu hasła na konto usera powinniśmy być połączeni zdalnie, co znacznie ułatwi ułatwi kopiowanie niektórych bardziej złożonych komend.
+
 # 3. Instalacja dockera
+
 Komendy, które trzeba wpisać, aby zainstalować pomyślnie dockera na Debianie.
 ```bash
 sudo apt update
@@ -49,6 +68,7 @@ sudo usermod -aG docker $USER
 newgrp docker
 ```
 ## 3.1. Analiza i weryfikacja
+
 `sudo apt install -y ca-certificates curl gnupg lsb-release`
 - ca-certificates - bezpieczne łączenie z HTTPS
 - curl - pobieranie plików z internetu
@@ -108,9 +128,7 @@ newgrp docker
 docker version
 docker run --rm hello-world
 ```
-# 4. Konteneryzacja usługi webowej - step by step
-## 4.1. Przygotowanie struktury projektu
-
+# 4. Konteneryzacja usługi webowej
 ```bash
 # Utwórz katalog projektu
 mkdir ~/projekty/projekt-02-kontener
@@ -120,10 +138,9 @@ cd ~/projekty/projekt-02-kontener
 mkdir -p app templates static
 ```
 
-## 4.2. Aplikacja Python/Flask
+## 4.1. Aplikacja Python/Flask
 
 Utwórz plik `app/main.py`:
-
 ```python
 """
 Panel wewnętrzny — przykładowa usługa webowa
@@ -183,9 +200,7 @@ if __name__ == "__main__":
     debug = APP_ENV == "development"
     app.run(host="0.0.0.0", port=port, debug=debug)
 ```
-
-## 4.3. Utwórz plik `templates/index.html`:
-
+## 4.2. Utwórz plik `templates/index.html`:
 ```html
 <!DOCTYPE html>
 <html lang="pl">
@@ -254,17 +269,14 @@ if __name__ == "__main__":
 </html>
 ```
 
-## 4.4. Utwórz plik `requirements.txt`:
-
+## 4.3. Utwórz plik `requirements.txt`:
 ```plaintext
 flask==3.1.0
 gunicorn==22.0.0
 ```
-
-## 4.5. Dockerfile: definicja obrazu
+## 4.4. Dockerfile: definicja obrazu
 
 Utwórz plik `Dockerfile` w katalogu głównym projektu:
-
 ```dockerfile
 # syntax=docker/dockerfile:1
 # Projekt 2. Konteneryzacja małej usługi biznesowej
@@ -326,9 +338,7 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
 # -b 0.0.0.0:5000: nasłuchiwanie na wszystkich interfejsach, port 5000
 CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:5000", "app.main:app"]
 ```
-
-## 4.6. Utwórz plik `.dockerignore`:
-
+## 4.5. Utwórz plik `.dockerignore`:
 ```plaintext
 # .dockerignore — pliki wykluczone z kontekstu budowania
 # (analogicznie do .gitignore)
@@ -357,7 +367,7 @@ htmlcov/
 README.md
 docker-compose*.yml
 ```
-## 4.7. Budowanie obrazu
+## 4.6. Budowanie obrazu
 ```bash
 # Budowanie obrazu z tagiem
 docker build -t firma/panel-wewnetrzny:1.0 .
@@ -379,7 +389,7 @@ docker inspect firma/panel-wewnetrzny:1.0 | head -80
 # Analiza warstw i ich rozmiarów (narzędzie zewnętrzne dive — Arch: pacman -S dive)
 # dive firma/panel-wewnetrzny:1.0
 ```
-## 4.8. Uruchamianie i testowanie
+## 4.7. Uruchamianie i testowanie
 ```bash
 # Uruchomienie w trybie interaktywnym (widać logi, Ctrl+C zatrzymuje)
 docker run --rm \
@@ -412,7 +422,6 @@ docker stats panel-dev          # Zużycie CPU i RAM w czasie rzeczywistym
 docker top panel-dev            # Lista procesów wewnątrz kontenera
 docker inspect panel-dev        # Pełne metadane uruchomionego kontenera
 ```
-
 ```bash
 # Wejście do uruchomionego kontenera (diagnostyka)
 docker exec -it panel-dev bash
@@ -424,7 +433,7 @@ ps aux                  # lista procesów (tylko gunicorn)
 cat /etc/os-release     # wersja systemu w kontenerze
 exit
 ```
-## 4.9. Wolumeny: trwałe przechowywanie danych
+## 4.8. Wolumeny: trwałe przechowywanie danych
 
 Kontener jest niemutowalny — wszelkie zmiany wewnątrz znikają po jego usunięciu. Wolumeny rozwiązują ten problem dla danych, które muszą przeżyć cykl życia kontenera (bazy danych, pliki użytkownika, logi).
 ```bash
@@ -453,9 +462,7 @@ docker run -d \
   firma/panel-wewnetrzny:1.0
 # :ro = read-only; kontener nie może modyfikować plików hosta
 ```
-
-## 4.10. Demonstracja warstw i cachowania
-
+## 4.9. Demonstracja warstw i cachowania
 ```bash
 # Pierwsza budowa — wszystkie warstwy od podstaw
 time docker build -t firma/panel-wewnetrzny:1.0 .
@@ -469,7 +476,7 @@ time docker build -t firma/panel-wewnetrzny:1.1 .
 
 # Porównanie czasów — różnica wynika z cachowania warstw zależności
 ```
-# 5. Kilka przydatnych komend Dockera
+## 4.10. Kilka przydatnych komend Dockera
 
 * `docker --version` – wersja Dockera
 * `docker ps` – uruchomione kontenery
@@ -483,3 +490,22 @@ time docker build -t firma/panel-wewnetrzny:1.1 .
 * `docker rmi obraz` – usuń obraz
 * `docker compose up -d` – uruchom projekt z pliku Compose
 * `docker compose down` – zatrzymaj projekt
+
+# 5. Git
+
+- stworzenie repo
+- opcjonalne stworzenie pliku .gitignore
+- `git init`
+- `git add .`
+- `git commit -m "nazwa"`
+
+  ## 5.1 Logowanie do githuba bez GUI
+
+- `sudo apt install gh`
+- `gh auth login`
+
+## 5.2 Upload na githuba
+
+- `git remote set-url origin https://github.com/DesTuu/DevOps.py.git`
+- `git branch -M main`
+- `git push -u origin main`
