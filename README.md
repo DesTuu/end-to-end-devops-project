@@ -15,7 +15,7 @@ Instalacja Linuxowego **Debiana 13 bez GUI** używając na Windowsie **VirtualBo
 https://www.debian.org/download
 Debian stawia na minimializm, jest znakomity do nauki od podstaw.
 
-## 1.1. Brak sudo
+## 1.1 Brak sudo
 
 Aby zainstalować sudo, trzeba przelogować się na **roota**, gdyż domyślnie logujemy się na stworzone konto usera.
 ```bash
@@ -31,7 +31,7 @@ Aby wyjść z zalogowanego roota należy wcisnąć `Ctrl + D`.
 Podczas instalacji systemu należało zaznaczyć opcję SSH, aby automatycznie zainstalowało wszystkie potrzebne pakiety do połączenia zdalnego.
 Jeśli używamy VirtualBoxa do wirtualizacji należy w ustawieniach sieci zmienić typ sieci na mostkowaną (bridget), aby mieć możliwość połączenia zdalnego przez SSH.
 
-## 2.1. Sprawdzenie SSH oraz IP
+## 2.1 Sprawdzenie SSH oraz IP
 ```bash
 sudo systemctl status ssh
 ip addr
@@ -67,7 +67,7 @@ sudo usermod -aG docker $USER
 
 newgrp docker
 ```
-## 3.1. Analiza i weryfikacja
+## 3.1 Analiza i weryfikacja
 
 `sudo apt install -y ca-certificates curl gnupg lsb-release`
 - ca-certificates - bezpieczne łączenie z HTTPS
@@ -138,9 +138,7 @@ cd ~/projekty/projekt-02-kontener
 mkdir -p app templates static
 ```
 
-## 4.1. Aplikacja Python/Flask
-
-Utwórz plik `app/main.py`:
+## 4.1 Aplikacja Python/Flask
 ```python
 """
 Panel wewnętrzny — przykładowa usługa webowa
@@ -200,7 +198,7 @@ if __name__ == "__main__":
     debug = APP_ENV == "development"
     app.run(host="0.0.0.0", port=port, debug=debug)
 ```
-## 4.2. Utwórz plik `templates/index.html`:
+## 4.2 Plik `templates/index.html`:
 ```html
 <!DOCTYPE html>
 <html lang="pl">
@@ -269,14 +267,12 @@ if __name__ == "__main__":
 </html>
 ```
 
-## 4.3. Utwórz plik `requirements.txt`:
+## 4.3 Plik `requirements.txt`:
 ```plaintext
 flask==3.1.0
 gunicorn==22.0.0
 ```
-## 4.4. Dockerfile: definicja obrazu
-
-Utwórz plik `Dockerfile` w katalogu głównym projektu:
+## 4.4 Dockerfile: definicja obrazu
 ```dockerfile
 # syntax=docker/dockerfile:1
 # Projekt 2. Konteneryzacja małej usługi biznesowej
@@ -338,7 +334,7 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
 # -b 0.0.0.0:5000: nasłuchiwanie na wszystkich interfejsach, port 5000
 CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:5000", "app.main:app"]
 ```
-## 4.5. Utwórz plik `.dockerignore`:
+## 4.5 Plik `.dockerignore`:
 ```plaintext
 # .dockerignore — pliki wykluczone z kontekstu budowania
 # (analogicznie do .gitignore)
@@ -367,7 +363,7 @@ htmlcov/
 README.md
 docker-compose*.yml
 ```
-## 4.6. Budowanie obrazu
+## 4.6 Budowanie obrazu
 ```bash
 # Budowanie obrazu z tagiem
 docker build -t firma/panel-wewnetrzny:1.0 .
@@ -389,7 +385,7 @@ docker inspect firma/panel-wewnetrzny:1.0 | head -80
 # Analiza warstw i ich rozmiarów (narzędzie zewnętrzne dive — Arch: pacman -S dive)
 # dive firma/panel-wewnetrzny:1.0
 ```
-## 4.7. Uruchamianie i testowanie
+## 4.7 Uruchamianie i testowanie
 ```bash
 # Uruchomienie w trybie interaktywnym (widać logi, Ctrl+C zatrzymuje)
 docker run --rm \
@@ -433,7 +429,7 @@ ps aux                  # lista procesów (tylko gunicorn)
 cat /etc/os-release     # wersja systemu w kontenerze
 exit
 ```
-## 4.8. Wolumeny: trwałe przechowywanie danych
+## 4.8 Wolumeny: trwałe przechowywanie danych
 
 Kontener jest niemutowalny — wszelkie zmiany wewnątrz znikają po jego usunięciu. Wolumeny rozwiązują ten problem dla danych, które muszą przeżyć cykl życia kontenera (bazy danych, pliki użytkownika, logi).
 ```bash
@@ -462,7 +458,7 @@ docker run -d \
   firma/panel-wewnetrzny:1.0
 # :ro = read-only; kontener nie może modyfikować plików hosta
 ```
-## 4.9. Demonstracja warstw i cachowania
+## 4.9 Demonstracja warstw i cachowania
 ```bash
 # Pierwsza budowa — wszystkie warstwy od podstaw
 time docker build -t firma/panel-wewnetrzny:1.0 .
@@ -476,7 +472,7 @@ time docker build -t firma/panel-wewnetrzny:1.1 .
 
 # Porównanie czasów — różnica wynika z cachowania warstw zależności
 ```
-## 4.10. Kilka przydatnych komend Dockera
+## 4.10 Kilka przydatnych komend Dockera
 
 * `docker --version` – wersja Dockera
 * `docker ps` – uruchomione kontenery
