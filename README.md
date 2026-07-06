@@ -499,7 +499,7 @@ time docker build -t firma/panel-wewnetrzny:1.1 .
 - `git add .`
 - `git commit -m "nazwa"`
 
-  ## 5.1 Logowanie do githuba bez GUI
+## 5.1 Logowanie do githuba bez GUI
 
 - `sudo apt install gh`
 - `gh auth login`
