@@ -75,6 +75,7 @@ newgrp docker
 - gnupg - sprawdzanie podpisów cyfrowych
 - lsb-release - wykrywanie wersji systemu
 - -y - automatyczne odpowiadanie "tak" na pytania
+  
 | Cecha                                           | `curl`                        | `wget`                    |
 | ----------------------------------------------- | ----------------------------- | ------------------------- |
 | Główne zastosowanie                             | Pobieranie i wysyłanie danych | Pobieranie plików         |
@@ -91,6 +92,7 @@ newgrp docker
 - tworzenie folderu na klucze podpisów
 - -d - utwórz katalog
 - -m 0755 - ustaw prawa dostępu
+  
 | Pakiet/komenda                         | Potrzebne do instalacji Dockera? | Potrzebne do codziennego używania Dockera/Compose? |
 | -------------------------------------- | -------------------------------- | -------------------------------------------------- |
 | `ca-certificates`                      | ✅ Tak                            | ❌ Nie                                              |
