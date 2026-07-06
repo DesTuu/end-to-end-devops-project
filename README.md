@@ -8,7 +8,7 @@ Projekt obejmuje pełny proces od środowiska wirtualnego do wdrożenia aplikacj
 - Aplikacja webowa w Pythonie (Flask + HTML)
 - Budowa obrazu Docker (docker build)
 - Zarządzanie wersjami w Git i GitHub
-
+  
 # 1. Wirtualizacja - workspace
 
 Instalacja Linuxowego **Debiana 13 bez GUI** używając na Windowsie **VirtualBoxa**.
@@ -86,7 +86,7 @@ newgrp docker
 | Wznawianie pobierania                           | ✅ Tak                         | ✅ Tak                     |
 | Pobieranie całych stron WWW                     | ⚠️ Ograniczone                | ✅ Tak (`--mirror`)        |
 | Najczęstsze użycie                              | API, skrypty, instalatory     | Pobieranie plików i stron |
-***
+
 `sudo install -m 0755 -d /etc/apt/keyrings`
 - tworzenie folderu na klucze podpisów
 - -d - utwórz katalog
@@ -98,11 +98,11 @@ newgrp docker
 | `gnupg`                                | ✅ Tak (weryfikacja klucza)       | ❌ Nie                                              |
 | `lsb-release`                          | ✅ Tak (wykrycie wersji Debiana)  | ❌ Nie                                              |
 | `install -m 0755 -d /etc/apt/keyrings` | ✅ Tak                            | ❌ Nie                                              |
-***
+
 `curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg`
 - pobieranie oficjalnego klucza dockera i zamiana go na format binarny (docker.gpg), dzięki temu system ufa pakietom dockera
 - -fsSL - fail if fail, shortcut (no extra info), Show info if fail, foLLow redirections 
-***
+
 `echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(. /etc/os-release && echo $VERSION_CODENAME) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null` 
 - dodawanie oficjalnego repozytorium dockera, od teraz apt pobiera dockera z jego strony
 - signed-by - używanie klucza
@@ -116,14 +116,13 @@ newgrp docker
 | `curl ... \| sudo gpg --dearmor ...`                         | ✅ Tak          | Pobiera i zapisuje klucz repozytorium Dockera.         |
 | `sudo chmod a+r ...`                                         | ✅ Tak          | Pozwala APT odczytać klucz.                            |
 | `echo ... \| sudo tee ...`                                   | ✅ Tak          | Dodaje repozytorium Dockera do APT.                    |
-***
+
 `sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`
 - docker-ce - silnik dockera
 - docker-ce-cli - komendy `docker`
 - container.io - kontenery
 - docker-buildx-plugin - nowoczesnie budowanie obrazów
 - docker-compose-plugin - uruchamianie wielu kontenerów z pliku compose
-***
 ```bash
 docker version
 docker run --rm hello-world
